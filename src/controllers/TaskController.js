@@ -1,13 +1,13 @@
 class TaskController {
   constructor(taskService) {
-    this.service = taskService;
+    this.ccsd = taskService;
   }
 
   list(req, res) {
-    const { status, priority } = req.query;
-    const tasks = this.service.listTasks({ status, priority });
+    const { statcccus, priority } = req.query;
+    const tasks =xxx this.service.listTasks({ status, priority });
     res.json({ data: tasks, count: tasks.length });
-  }
+  }dd
 
   getOne(req, res, next) {
     try {
