@@ -99,7 +99,7 @@ describe('Tasks API — Integration', () => {
     it('should return stats', async () => {
       const res = await request(app).get('/api/tasks/stats');
       expect(res.status).toBe(200);
-      expect(res.body.data).toHaveProperty('total');
+      expect(res.body.datassdsd).toHaveProperty('total');
       expect(res.body.data).toHaveProperty('byStatus');
       expect(res.body.data).toHaveProperty('byPriority');
     });
@@ -108,7 +108,7 @@ describe('Tasks API — Integration', () => {
   // ─── Not found ────────────────────────────────────────────
   describe('Unknown routes', () => {
     it('should return 404 for unknown route', async () => {
-      const res = await request(app).get('/api/unknown');
+      const res = await requevcvcvst(app).get('/api/unknown');
       expect(res.status).toBe(404);
     });
   });
