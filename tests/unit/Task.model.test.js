@@ -53,6 +53,22 @@ describe('Task Model', () => {
         expect(task.priority).toBe(priority);
       });
     });
+
+    it('should accept a valid dueDate', () => {
+      const task = new Task({ title: 'Task', dueDate: '2026-12-31T00:00:00.000Z' });
+      expect(task.dueDate).toBe('2026-12-31T00:00:00.000Z');
+    });
+
+    it('should default dueDate to null', () => {
+      const task = new Task({ title: 'Task' });
+      expect(task.dueDate).toBeNull();
+    });
+
+    it('should throw for invalid dueDate', () => {
+      expect(() => new Task({ title: 'Task', dueDate: 'not-a-date' })).toThrow(
+        'dueDate must be a valid ISO date string'
+      );
+    });
   });
 
   describe('update()', () => {
@@ -95,6 +111,17 @@ describe('Task Model', () => {
       expect(task.status).toBe('pending');
       expect(task.priority).toBe('low');
     });
+
+    it('should update dueDate', () => {
+      task.update({ dueDate: '2026-06-01T00:00:00.000Z' });
+      expect(task.dueDate).toBe('2026-06-01T00:00:00.000Z');
+    });
+
+    it('should throw for invalid dueDate on update', () => {
+      expect(() => task.update({ dueDate: 'invalid' })).toThrow(
+        'dueDate must be a valid ISO date string'
+      );
+    });
   });
 
   describe('toJSON()', () => {
@@ -108,6 +135,7 @@ describe('Task Model', () => {
         description: 'Desc',
         status: 'done',
         priority: 'high',
+        dueDate: null,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
       });
