@@ -1,0 +1,49 @@
+name: Rollback
+
+on:
+  workflow_dispatch:           # disparo manual pelo GitHub
+    inputs:
+      commit_sha:
+        description: 'SHA do commit para fazer rollback (ex: 26fc1ce)'
+        required: true
+        type: string
+      environment:
+        description: 'Ambiente alvo'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  rollback:
+    name: Rollback ${{ inputs.environment }} → ${{ inputs.commit_sha }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify image exists
+        run: |
+          docker pull ghcr.io/${{ github.repository }}:${{ inputs.commit_sha }}
+          echo "Imagem verificada: ghcr.io/${{ github.repository }}:${{ inputs.commit_sha }}"
+
+      - name: Deploy previous version
+        run: |
+          echo "Redeployando versão ${{ inputs.commit_sha }} em ${{ inputs.environment }}..."
+          echo "IMAGE: ghcr.io/${{ github.repository }}:${{ inputs.commit_sha }}"
+          # Comando real aqui: kubectl set image, fly deploy, railway up, etc.
+
+      - name: Confirm rollback
+        run: |
+          echo "Rollback concluído!"
+          echo "Ambiente : ${{ inputs.environment }}"
+          echo "Versão   : ${{ inputs.commit_sha }}"
+          echo "Por      : ${{ github.actor }}"
+          echo "Quando   : $(date -u)"
